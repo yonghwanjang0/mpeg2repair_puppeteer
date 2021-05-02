@@ -2,9 +2,12 @@
 from pymediainfo import MediaInfo
 
 
-m2r_path = "exe/mpeg2repair.exe"
 path_txt_file = "path.txt"
 log_save_root = "log/"
+
+m2r_path_text = "exe_path.txt"
+with open(m2r_path_text, mode='r') as ff:
+    m2r_path = ff.read()
 
 
 def time_converter(string):

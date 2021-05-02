@@ -1,5 +1,5 @@
 ﻿from configuration import *
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, freeze_support
 from control import controller_method
 import time
 
@@ -122,6 +122,7 @@ class Main(QMainWindow):
 
 
 if __name__ == '__main__':
+    freeze_support()
     import sys
     app = QApplication(sys.argv)
     ex = Main()
