@@ -4,10 +4,11 @@ mpeg2repair automation
 
 This source code makes for windows 10.
 
-/exe_path.txt
+## Use Settings
+### /exe_path.txt
  * please input mpeg2repair execute file path. (ex. C:/mpeg2repair/mpeg2repair.exe)
 
-/path.txt
+### /path.txt
 * write transport stream files folder path on each line of file.
 * separate by each line. 
   (ex.
@@ -16,8 +17,7 @@ This source code makes for windows 10.
   E:/target/)
 * maximum 3 lines possible, more input value be ignored.
 
-requirement
-
+## requirement
 * PyQt5
 * pywinauto
 * pymediainfo
