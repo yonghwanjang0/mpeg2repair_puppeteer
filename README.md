@@ -15,3 +15,9 @@ This source code makes for windows 10.
   D:/target/\n
   E:/target/)
 * maximum 3 lines possible, more input value be ignored.
+
+requirement
+
+* PyQt5
+* pywinauto
+* pymediainfo
