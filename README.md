@@ -2,6 +2,8 @@
 
 mpeg2repair automation
 
+This source code makes for windows 10.
+
 /exe_path.txt
  * please input mpeg2repair execute file path. (ex. C:/mpeg2repair/mpeg2repair.exe)
 
