@@ -18,9 +18,10 @@ def set_position(program_list):
 
 
 def set_worker_number():
+    max_number = 3
     folder_list = input_path()
-    if len(folder_list) >= 3:
-        number = 3
+    if len(folder_list) >= max_number:
+        number = max_number
     else:
         number = len(folder_list)
 
@@ -41,8 +42,7 @@ def set_folder_and_files(program_list):
 
 
 def start_mpeg2repair(mpeg2repair, filename, path):
-    mpeg2repair.window.set_focus()
-    time.sleep(0.1)
+    mpeg2repair.window['...Button'].set_focus()
     mpeg2repair.file_open(filename, path)
     mpeg2repair.find_pid()
     mpeg2repair.checkbox_click()
@@ -50,11 +50,15 @@ def start_mpeg2repair(mpeg2repair, filename, path):
 
 
 def finish_mpeg2repair(mpeg2repair):
-    mpeg2repair.window.click_input()
+    mpeg2repair.window['확인Button'].set_focus()
     mpeg2repair.finished_popup_close()
 
 
-def run_thread(mpeg2repair, queue, lock, index, folder_path):
+def run_thread(*args):
+    check_waiting_time = 1
+    mpeg2repair, queue, lock, index, folder_path = (
+        args[0], args[1], args[2], args[3], args[4])
+
     for filename in mpeg2repair.file_name_list:
         file_status = check_file_status(folder_path + filename)
         good_file = file_status[0]
@@ -69,9 +73,10 @@ def run_thread(mpeg2repair, queue, lock, index, folder_path):
                     finish_mpeg2repair(mpeg2repair)
                 start_mpeg2repair(mpeg2repair, filename, folder_path)
 
-            mpeg2repair.progress_status()
-            if not mpeg2repair.finished:
-                time.sleep(mpeg2repair.remain_time)
+            if unit == "GB":
+                mpeg2repair.progress_status()
+                if not mpeg2repair.finished:
+                    time.sleep(mpeg2repair.remain_time)
 
             while True:
                 mpeg2repair.progress_status()
@@ -83,7 +88,7 @@ def run_thread(mpeg2repair, queue, lock, index, folder_path):
                     queue.put([log_text, index])
                     break
                 else:
-                    time.sleep(3)
+                    time.sleep(check_waiting_time)
         else:
             log_text = filename + " / bad file"
             queue.put([log_text, index])
@@ -99,7 +104,8 @@ def controller_method(queue):
 
     for index in range(0, worker_count):
         thread_list.append(Thread(target=run_thread,
-                                  args=(program_list[index], queue, lock, index, folder_list[index], )))
+                                  args=(program_list[index], queue, lock, index,
+                                        folder_list[index], )))
 
     for thread in thread_list:
         thread.daemon = True

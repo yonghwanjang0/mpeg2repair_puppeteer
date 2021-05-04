@@ -23,7 +23,7 @@ class CentralWidget(QWidget):
         self.label3 = QLabel("Repair 3")
 
         self.btn1 = QPushButton("Start (F2)", self)
-        self.btn1.setMinimumHeight(100)
+        self.btn1.setMinimumHeight(80)
 
         textbox_layout = QGridLayout()
         full_layout = QVBoxLayout()
@@ -46,7 +46,7 @@ class Main(QMainWindow):
         super().__init__()
 
         self.title = 'MPEG2Repair Auto Checker'
-        self.position = (300, 100, 1200, 600)
+        self.position = (620, 480, 1200, 560)
         self.cWidget = CentralWidget()
         self.setCentralWidget(self.cWidget)
 
@@ -104,7 +104,8 @@ class Main(QMainWindow):
 
             filename, thread_number = result[0], result[1]
             folder_path = make_folder_tree(
-                log_save_root, self.work_start_time, self.work_start_time_string)
+                log_save_root, self.work_start_time,
+                self.work_start_time_string)
             make_folder(folder_path)
             log_file_name = "{0}-{1}.txt".format(
                 self.work_start_time_string, str(thread_number))
