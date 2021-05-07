@@ -100,17 +100,32 @@ def input_path():
     return path_list
 
 
+def get_path_and_option(raw_path_list):
+    output = []
+    for raw_line in raw_path_list:
+        split = raw_line.split("|")
+        if len(split) == 2:
+            path, option = split[0], split[1]
+        else:
+            path, option = split[0], None
+        output.append([path, option])
+
+    return output
+
+
 def make_file_list(paths):
     total_list = []
     for p in paths:
-        files_list = next(os.walk(p))[2]
-        tp_list = files_filter(files_list, '.tp')
+        path, option = p[0], p[1]
+        files_list = next(os.walk(path))[2]
+        files_list = date_filter(files_list, option)
+        tp_list = container_filter(files_list, '.tp')
         total_list.append(tp_list)
 
     return total_list
 
 
-def files_filter(files_list, filter_string):
+def container_filter(files_list, filter_string):
     length = len(filter_string)
     filtered_list = []
     for file_name in files_list:
@@ -118,6 +133,40 @@ def files_filter(files_list, filter_string):
             filtered_list.append(file_name)
 
     return filtered_list
+
+
+def date_filter(files_list, date_option):
+    if not date_option:
+        filtered_list = files_list
+    else:
+        filtered_list = []
+        for file_name in files_list:
+            split = file_name.split("_")
+            passed = filtered_date_condition(int(split[0]), date_option)
+            if passed:
+                filtered_list.append(file_name)
+
+    return filtered_list
+
+
+def filtered_date_condition(file_date, option):
+    value = False
+    condition = option.split("-")
+    if len(condition) == 1:
+        if file_date == int(condition[0]):
+            value = True
+    else:
+        if condition[0] and condition[1]:
+            if int(min(condition)) <= file_date <= int(max(condition)):
+                value = True
+        elif condition[0]:
+            if int(condition[0]) <= file_date:
+                value = True
+        elif condition[1]:
+            if file_date <= int(condition[1]):
+                value = True
+
+    return value
 
 
 def check_file_status(file_path):

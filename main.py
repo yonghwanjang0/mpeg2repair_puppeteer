@@ -1,10 +1,13 @@
-﻿from configuration import *
+﻿from configuration import make_folder_tree, text_save, log_save_root, \
+    make_folder
 from multiprocessing import Process, Queue, freeze_support
 from control import controller_method
 import time
 
-from PyQt5.QtCore import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import QTimer
+from PyQt5.QtWidgets import (QWidget, QTextEdit, QLabel,
+                             QPushButton, QGridLayout, QVBoxLayout,
+                             QMainWindow, QAction, QApplication)
 
 
 class CentralWidget(QWidget):
@@ -46,7 +49,7 @@ class Main(QMainWindow):
         super().__init__()
 
         self.title = 'MPEG2Repair Auto Checker'
-        self.position = (620, 480, 1200, 560)
+        self.position = (620, 480, 1260, 660)
         self.cWidget = CentralWidget()
         self.setCentralWidget(self.cWidget)
 

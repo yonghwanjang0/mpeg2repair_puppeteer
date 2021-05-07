@@ -1,6 +1,7 @@
 from threading import Thread, Lock
 import time
-from configuration import *
+from configuration import input_path, get_path_and_option, \
+    make_file_list, check_file_status
 from MPEG2Repair import MPEG2Repair
 
 
@@ -33,12 +34,17 @@ def set_stream_files_list(worker, files_list):
 
 
 def set_folder_and_files(program_list):
-    folder_list = input_path()
-    files_list = make_file_list(folder_list)
+    raw_list = input_path()
+    path_and_option_list = get_path_and_option(raw_list)
+    files_list = make_file_list(path_and_option_list)
     for index, worker in enumerate(program_list):
         set_stream_files_list(worker, files_list[index])
 
-    return folder_list
+    path_list = []
+    for data in path_and_option_list:
+        path_list.append(data[0])
+
+    return path_list
 
 
 def start_mpeg2repair(mpeg2repair, filename, path):
@@ -55,6 +61,7 @@ def finish_mpeg2repair(mpeg2repair):
 
 
 def run_thread(*args):
+    input_queue_first_time = True
     check_waiting_time = 1
     mpeg2repair, queue, lock, index, folder_path = (
         args[0], args[1], args[2], args[3], args[4])
@@ -85,13 +92,17 @@ def run_thread(*args):
                         finish_mpeg2repair(mpeg2repair)
                     log_text = "{0} / {1} / {2} {3}".format(
                         filename, duration, file_size, unit)
-                    queue.put([log_text, index])
                     break
                 else:
                     time.sleep(check_waiting_time)
         else:
             log_text = filename + " / bad file"
-            queue.put([log_text, index])
+
+        if input_queue_first_time:
+            queue.put([folder_path, index])
+            queue.put(["=" * 50, index])
+            input_queue_first_time = False
+        queue.put([log_text, index])
 
 
 def controller_method(queue):
