@@ -2,6 +2,8 @@
 
 mpeg2repair automation
 
+This code automates ts file error checking by mpeg2repair.
+
 This source code makes for windows 10.
 
 ## Use Settings
