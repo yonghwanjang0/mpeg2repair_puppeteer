@@ -19,7 +19,8 @@ class MPEG2Repair:
         self.object.iface_transform.Move(self.position[count][0],
                                          self.position[count][1])
 
-    def set_folder_path(self, path):
+    @staticmethod
+    def set_folder_path(path):
         output = ""
         split = path.split("/")
         for value in split:
@@ -39,6 +40,8 @@ class MPEG2Repair:
         open_button.set_focus()
         open_button.type_keys("{ENTER}")
         if self.window['Warning:Dialog'].exists():
+            if self.window['Finished Processing File.'].exists():
+                self.finished_popup_close()
             self.cancel_overwrite_popup()
             open_button.set_focus()
             open_button.type_keys("{ENTER}")

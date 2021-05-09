@@ -5,17 +5,31 @@ from configuration import input_path, get_path_and_option, \
 from MPEG2Repair import MPEG2Repair
 
 
-def make_mpeg2repair(worker_count):
+def check_api_input_path(qt_path_list):
+    value = False
+    for path in qt_path_list:
+        if path is not None:
+            value = True
+            break
+
+    return value
+
+
+def make_mpeg2repair(need_to_create_list):
     program_list = []
-    for i in range(worker_count):
-        program_list.append(MPEG2Repair())
+    for create in need_to_create_list:
+        if create:
+            program_list.append(MPEG2Repair())
+        else:
+            program_list.append(None)
 
     return program_list
 
 
 def set_position(program_list):
     for index, worker in enumerate(program_list):
-        worker.position_set(index)
+        if worker:
+            worker.position_set(index)
 
 
 def set_worker_number():
@@ -33,18 +47,36 @@ def set_stream_files_list(worker, files_list):
     worker.file_name_list = files_list[:]
 
 
-def set_folder_and_files(program_list):
-    raw_list = input_path()
-    path_and_option_list = get_path_and_option(raw_list)
+def set_folder_and_files(program_list, path_and_option_list):
     files_list = make_file_list(path_and_option_list)
     for index, worker in enumerate(program_list):
-        set_stream_files_list(worker, files_list[index])
+        if worker:
+            set_stream_files_list(worker, files_list[index])
 
     path_list = []
     for data in path_and_option_list:
         path_list.append(data[0])
 
     return path_list
+
+
+def make_path_and_option_list_by_api(path_list, option_list):
+    path_and_option_list = []
+    for index in range(len(path_list)):
+        if path_list[index]:
+            path, option = path_list[index], option_list[index]
+        else:
+            path, option = None, None
+        path_and_option_list.append([path, option])
+
+    return path_and_option_list
+
+
+def make_path_and_option_list_by_text():
+    raw_list = input_path()
+    path_and_option_list = get_path_and_option(raw_list)
+
+    return path_and_option_list
 
 
 def start_mpeg2repair(mpeg2repair, filename, path):
@@ -105,25 +137,46 @@ def run_thread(*args):
         queue.put([log_text, index])
 
 
-def controller_method(queue):
+def controller_method(queue, folder_list, option_list):
     thread_list = []
     lock = Lock()
-    worker_count = set_worker_number()
-    program_list = make_mpeg2repair(worker_count)
+
+    api_input = check_api_input_path(folder_list)
+    # api input path
+    if api_input:
+        program_list = make_mpeg2repair(folder_list)
+        path_and_option_list = make_path_and_option_list_by_api(
+            folder_list, option_list)
+
+    # text file input path
+    else:
+        worker_count = set_worker_number()
+        need_to_create_list = [True for count in range(worker_count)]
+        program_list = make_mpeg2repair(need_to_create_list)
+        path_and_option_list = make_path_and_option_list_by_text()
+
     set_position(program_list)
-    folder_list = set_folder_and_files(program_list)
+    folder_list = set_folder_and_files(program_list, path_and_option_list)
 
-    for index in range(0, worker_count):
-        thread_list.append(Thread(target=run_thread,
-                                  args=(program_list[index], queue, lock, index,
-                                        folder_list[index], )))
+    for index, program in enumerate(program_list):
+        if program:
+            thread_list.append(Thread(target=run_thread,
+                                      args=(program, queue, lock, index,
+                                            folder_list[index], )))
+        else:
+            thread_list.append(None)
 
     for thread in thread_list:
-        thread.daemon = True
-        thread.start()
+        if thread:
+            thread.daemon = True
+            thread.start()
 
     for thread in thread_list:
-        thread.join()
+        if thread:
+            thread.join()
 
     for program in program_list:
-        program.close()
+        if program:
+            program.close()
+
+    queue.put(["finish"])

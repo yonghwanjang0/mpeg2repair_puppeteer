@@ -5,7 +5,7 @@ from control import controller_method
 import time
 
 from PyQt5.QtCore import QTimer
-from PyQt5.QtWidgets import (QWidget, QTextEdit, QLabel,
+from PyQt5.QtWidgets import (QWidget, QTextEdit, QLineEdit, QLabel,
                              QPushButton, QGridLayout, QVBoxLayout,
                              QMainWindow, QAction, QApplication)
 
@@ -21,9 +21,23 @@ class CentralWidget(QWidget):
         self.qtxt3 = QTextEdit(self)
         self.qtxt3.setReadOnly(True)
 
+        self.path_display1 = QLineEdit(self)
+        self.path_display2 = QLineEdit(self)
+        self.path_display3 = QLineEdit(self)
+
+        self.option_display1 = QLineEdit(self)
+        self.option_display2 = QLineEdit(self)
+        self.option_display3 = QLineEdit(self)
+
         self.label1 = QLabel("Repair 1")
         self.label2 = QLabel("Repair 2")
         self.label3 = QLabel("Repair 3")
+        self.path_label1 = QLabel("Input Path")
+        self.path_label2 = QLabel("Input Path")
+        self.path_label3 = QLabel("Input Path")
+        self.option_label1 = QLabel("Input Option (optional)")
+        self.option_label2 = QLabel("Input Option (optional)")
+        self.option_label3 = QLabel("Input Option (optional)")
 
         self.btn1 = QPushButton("Start (F2)", self)
         self.btn1.setMinimumHeight(80)
@@ -37,6 +51,20 @@ class CentralWidget(QWidget):
         textbox_layout.addWidget(self.qtxt1, 1, 0)
         textbox_layout.addWidget(self.qtxt2, 1, 1)
         textbox_layout.addWidget(self.qtxt3, 1, 2)
+
+        textbox_layout.addWidget(self.path_label1, 2, 0)
+        textbox_layout.addWidget(self.path_label2, 2, 1)
+        textbox_layout.addWidget(self.path_label3, 2, 2)
+        textbox_layout.addWidget(self.path_display1, 3, 0)
+        textbox_layout.addWidget(self.path_display2, 3, 1)
+        textbox_layout.addWidget(self.path_display3, 3, 2)
+
+        textbox_layout.addWidget(self.option_label1, 4, 0)
+        textbox_layout.addWidget(self.option_label2, 4, 1)
+        textbox_layout.addWidget(self.option_label3, 4, 2)
+        textbox_layout.addWidget(self.option_display1, 5, 0)
+        textbox_layout.addWidget(self.option_display2, 5, 1)
+        textbox_layout.addWidget(self.option_display3, 5, 2)
 
         full_layout.addLayout(textbox_layout)
         full_layout.addWidget(self.btn1)
@@ -56,9 +84,14 @@ class Main(QMainWindow):
         self.queue = Queue()
         self.controller = None
         self.finished_check_timer = QTimer()
+
+        self.work_status = False
         self.work_start_time = None
         self.work_start_time_string = None
-        self.work_status = False
+
+        self.path_list = [None, None, None]
+        self.option_list = [None, None, None]
+        self.current_log = ["", "", ""]
 
         # Function Setting
         get_start = QAction("&Start (F2)", self)
@@ -82,12 +115,15 @@ class Main(QMainWindow):
 
     def program_start(self):
         if not self.work_status:
+            self.work_status = True
             self.work_start_time = time.localtime()
             self.work_start_time_string = time.strftime(
                 "%Y%m%d-%H%M%S", self.work_start_time)
+            self.get_folder_path()
+            self.get_option()
 
             self.controller = Process(target=controller_method, args=(
-                self.queue, ))
+                self.queue, self.path_list, self.option_list, ))
             self.controller.daemon = True
             self.controller.start()
 
@@ -95,34 +131,64 @@ class Main(QMainWindow):
             self.finished_check_timer.timeout.connect(self.finished_check)
             self.finished_check_timer.start()
 
-            self.work_status = True
+    def get_folder_path(self):
+        if self.cWidget.path_display1.text():
+            self.path_list[0] = self.cWidget.path_display1.text()
+        if self.cWidget.path_display2.text():
+            self.path_list[1] = self.cWidget.path_display2.text()
+        if self.cWidget.path_display3.text():
+            self.path_list[2] = self.cWidget.path_display3.text()
 
-    def log_update(self, msg, textbox, log_save_path):
+    def get_option(self):
+        if self.cWidget.option_display1.text():
+            self.option_list[0] = self.cWidget.option_display1.text()
+        if self.cWidget.option_display2.text():
+            self.option_list[1] = self.cWidget.option_display2.text()
+        if self.cWidget.option_display3.text():
+            self.option_list[2] = self.cWidget.option_display3.text()
+
+    @staticmethod
+    def log_update(msg, textbox):
         textbox.append(msg)
-        text_save(log_save_path, textbox.toPlainText())
 
     def finished_check(self):
         if self.queue.qsize():
             result = self.queue.get()
+            if result[0] != "finish":
+                filename, thread_number = result[0], result[1]
+                folder_path = make_folder_tree(
+                    log_save_root, self.work_start_time,
+                    self.work_start_time_string)
+                make_folder(folder_path)
+                log_file_name = "{0}-{1}.txt".format(
+                    self.work_start_time_string, str(thread_number))
 
-            filename, thread_number = result[0], result[1]
-            folder_path = make_folder_tree(
-                log_save_root, self.work_start_time,
-                self.work_start_time_string)
-            make_folder(folder_path)
-            log_file_name = "{0}-{1}.txt".format(
-                self.work_start_time_string, str(thread_number))
+                if thread_number == 0:
+                    textbox = self.cWidget.qtxt1
+                elif thread_number == 1:
+                    textbox = self.cWidget.qtxt2
+                else:
+                    textbox = self.cWidget.qtxt3
 
-            log_path = folder_path + log_file_name
+                self.log_update(filename, textbox)
 
-            if thread_number == 0:
-                textbox = self.cWidget.qtxt1
-            elif thread_number == 1:
-                textbox = self.cWidget.qtxt2
+                log_path = folder_path + log_file_name
+                self.current_log[thread_number] += filename + "\n"
+                text_save(log_path, self.current_log[thread_number])
             else:
-                textbox = self.cWidget.qtxt3
+                self.initialize()
 
-            self.log_update(filename, textbox, log_path)
+    def initialize(self):
+        self.finished_check_timer.stop()
+        self.controller.join()
+
+        self.work_status = False
+        self.work_start_time = None
+        self.work_start_time_string = None
+
+        self.path_list = [None, None, None]
+        self.option_list = [None, None, None]
+        self.current_log = ["", "", ""]
 
 
 if __name__ == '__main__':

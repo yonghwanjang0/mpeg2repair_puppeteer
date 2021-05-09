@@ -117,9 +117,12 @@ def make_file_list(paths):
     total_list = []
     for p in paths:
         path, option = p[0], p[1]
-        files_list = next(os.walk(path))[2]
-        files_list = date_filter(files_list, option)
-        tp_list = container_filter(files_list, '.tp')
+        if path:
+            files_list = next(os.walk(path))[2]
+            files_list = date_filter(files_list, option)
+            tp_list = container_filter(files_list, '.tp')
+        else:
+            tp_list = []
         total_list.append(tp_list)
 
     return total_list
