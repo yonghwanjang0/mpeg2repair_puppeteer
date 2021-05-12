@@ -136,6 +136,8 @@ def run_thread(*args):
             input_queue_first_time = False
         queue.put([log_text, index])
 
+    mpeg2repair.close()
+
 
 def controller_method(queue, folder_list, option_list):
     thread_list = []
@@ -174,9 +176,5 @@ def controller_method(queue, folder_list, option_list):
     for thread in thread_list:
         if thread:
             thread.join()
-
-    for program in program_list:
-        if program:
-            program.close()
 
     queue.put(["finish"])

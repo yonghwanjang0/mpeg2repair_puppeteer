@@ -76,7 +76,7 @@ class Main(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.title = 'MPEG2Repair Auto Checker'
+        self.title = 'MPEG2Repair Auto Checker v1.0.5'
         self.position = (620, 480, 1260, 660)
         self.cWidget = CentralWidget()
         self.setCentralWidget(self.cWidget)
@@ -131,21 +131,35 @@ class Main(QMainWindow):
             self.finished_check_timer.timeout.connect(self.finished_check)
             self.finished_check_timer.start()
 
+    def get_attr_method(self, input_list, name_string):
+        for index in range(0, len(input_list)):
+            number = str(index + 1)
+            name = name_string + number
+            display_object = getattr(self.cWidget, name)
+
+            if display_object.text():
+                input_list[index] = display_object.text()
+
     def get_folder_path(self):
-        if self.cWidget.path_display1.text():
-            self.path_list[0] = self.cWidget.path_display1.text()
-        if self.cWidget.path_display2.text():
-            self.path_list[1] = self.cWidget.path_display2.text()
-        if self.cWidget.path_display3.text():
-            self.path_list[2] = self.cWidget.path_display3.text()
+        self.get_attr_method(self.path_list, 'path_display')
 
     def get_option(self):
-        if self.cWidget.option_display1.text():
-            self.option_list[0] = self.cWidget.option_display1.text()
-        if self.cWidget.option_display2.text():
-            self.option_list[1] = self.cWidget.option_display2.text()
-        if self.cWidget.option_display3.text():
-            self.option_list[2] = self.cWidget.option_display3.text()
+        self.get_attr_method(self.option_list, 'option_display')
+
+    def clear_line_edit_by_before_worked(self):
+        for index, value in enumerate(self.path_list):
+            number = str(index + 1)
+            path_object_name = 'path_display{}'.format(number)
+            option_object_name = 'option_display{}'.format(number)
+
+            path_display_object = getattr(self.cWidget, path_object_name)
+            option_display_object = getattr(self.cWidget, option_object_name)
+
+            if value:
+                if path_display_object.text():
+                    path_display_object.clear()
+                if option_display_object.text():
+                    option_display_object.clear()
 
     @staticmethod
     def log_update(msg, textbox):
@@ -186,6 +200,7 @@ class Main(QMainWindow):
         self.work_start_time = None
         self.work_start_time_string = None
 
+        self.clear_line_edit_by_before_worked()
         self.path_list = [None, None, None]
         self.option_list = [None, None, None]
         self.current_log = ["", "", ""]
