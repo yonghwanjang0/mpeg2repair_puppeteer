@@ -67,8 +67,17 @@ class MPEG2Repair:
     def error_check_start(self):
         self.window['StartButton'].type_keys("{ENTER}")
 
+    def get_text(self):
+        try:
+            text = self.progress.window_text()
+        except Exception as e:
+            print(str(e))
+            text = self.get_text()
+
+        return text
+
     def progress_status(self):
-        text = self.progress.window_text()
+        text = self.get_text()
         percent = text[:text.find(" % Completed")]
         remain_time = text[text.find("Remaining: ") + len("Remaining: "):]
         if percent == "100":
