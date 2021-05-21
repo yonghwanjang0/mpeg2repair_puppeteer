@@ -35,18 +35,18 @@ class MPEG2Repair:
         self.default_folder = True
 
     def open_select_file(self):
-        open_button = self.window.child_window(
-            auto_id="1002", control_type="Button")
-        open_button.set_focus()
-        open_button.type_keys("{ENTER}")
+        if self.window['Finished Processing File.'].exists():
+            self.finished_popup_close()
+
         if self.window['Warning:Dialog'].exists():
-            if self.window['Finished Processing File.'].exists():
-                self.finished_popup_close()
             self.cancel_overwrite_popup()
-            open_button.set_focus()
-            open_button.type_keys("{ENTER}")
-        active_open_button = self.window['win찾는 위치(I):Static'].exists()
-        if not active_open_button:
+
+        dialog_button = self.window['...button0']
+        dialog_button.set_focus()
+        dialog_button.type_keys("{ENTER}")
+
+        active_dialog = self.window['찾는 위치(I):Static'].exists()
+        if not active_dialog:
             self.open_select_file()
 
     def file_open(self, filename, folder_path):
