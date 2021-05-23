@@ -87,10 +87,14 @@ class MPEG2Repair:
     def finished_popup_close(self):
         self.window['확인Button'].set_focus()
         self.window['확인Button'].type_keys("{ENTER}")
+        self.window.type_keys("{TAB}")
+        self.window.type_keys("{TAB}")
 
     def cancel_overwrite_popup(self):
         self.window['아니요(N)Button'].set_focus()
         self.window['아니요(N)Button'].type_keys("{ENTER}")
+        self.window.type_keys("{TAB}")
+        self.window.type_keys("{TAB}")
 
     def close(self):
         self.app.kill()

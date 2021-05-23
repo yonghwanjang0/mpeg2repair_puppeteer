@@ -80,7 +80,6 @@ def make_path_and_option_list_by_text():
 
 
 def start_mpeg2repair(mpeg2repair, filename, path):
-    mpeg2repair.window['...Button'].set_focus()
     mpeg2repair.file_open(filename, path)
     mpeg2repair.find_pid()
     mpeg2repair.checkbox_click()
@@ -88,7 +87,6 @@ def start_mpeg2repair(mpeg2repair, filename, path):
 
 
 def finish_mpeg2repair(mpeg2repair):
-    mpeg2repair.window['확인Button'].set_focus()
     mpeg2repair.finished_popup_close()
 
 
