@@ -79,8 +79,8 @@ def make_path_and_option_list_by_text():
     return path_and_option_list
 
 
-def start_mpeg2repair(mpeg2repair, filename, path):
-    mpeg2repair.file_open(filename, path)
+def start_mpeg2repair(mpeg2repair, filename, path, multi_audio):
+    mpeg2repair.file_open(filename, path, multi_audio)
     mpeg2repair.find_pid()
     mpeg2repair.checkbox_click()
     mpeg2repair.error_check_start()
@@ -90,9 +90,18 @@ def finish_mpeg2repair(mpeg2repair):
     mpeg2repair.finished_popup_close()
 
 
+def wait_finished_popup(mpeg2repair):
+    popup = False
+    while not popup:
+        time.sleep(0.2)
+        popup = mpeg2repair.window['Finished Processing File.'].exists()
+
+
 def run_thread(*args):
     input_queue_first_time = True
     check_waiting_time = 1
+    multi_audio = False
+    last_file_multi_audio = False
     mpeg2repair, queue, lock, index, folder_path = (
         args[0], args[1], args[2], args[3], args[4])
 
@@ -100,15 +109,12 @@ def run_thread(*args):
         file_status = check_file_status(folder_path + filename)
         good_file = file_status[0]
         if good_file:
-            duration, file_size, unit = (
-                file_status[1], file_status[2][0], file_status[2][1])
+            duration, file_size, unit, last_file_multi_audio = (
+                file_status[1], file_status[2][0], file_status[2][1], file_status[3])
 
-            finish_popup_exists = mpeg2repair.window[
-                'Finished Processing File.'].exists()
             with lock:
-                if finish_popup_exists:
-                    finish_mpeg2repair(mpeg2repair)
-                start_mpeg2repair(mpeg2repair, filename, folder_path)
+                start_mpeg2repair(
+                    mpeg2repair, filename, folder_path, multi_audio)
 
             if unit == "GB":
                 mpeg2repair.progress_status()
@@ -119,6 +125,7 @@ def run_thread(*args):
                 mpeg2repair.progress_status()
                 if mpeg2repair.finished:
                     with lock:
+                        wait_finished_popup(mpeg2repair)
                         finish_mpeg2repair(mpeg2repair)
                     log_text = "{0} / {1} / {2} {3}".format(
                         filename, duration, file_size, unit)
@@ -133,6 +140,7 @@ def run_thread(*args):
             queue.put(["=" * 50, index])
             input_queue_first_time = False
         queue.put([log_text, index])
+        multi_audio = last_file_multi_audio
 
     mpeg2repair.close()
 

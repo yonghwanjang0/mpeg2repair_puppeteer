@@ -60,6 +60,15 @@ def convert_file_size(file_size):
     return str(convert), unit
 
 
+def check_multi_audio(info):
+    if info.tracks[3].track_type == 'Audio':
+        value = True
+    else:
+        value = False
+
+    return value
+
+
 def convert_path(origin):
     output = ""
     split = origin.split("/")
@@ -175,6 +184,7 @@ def filtered_date_condition(file_date, option):
 def check_file_status(file_path):
     duration = None
     file_size = None
+    multi_audio_track = False
     media_info = MediaInfo.parse(file_path)
     try:
         if "MPEG-TS" in media_info.tracks[0].format:
@@ -188,5 +198,6 @@ def check_file_status(file_path):
     if good_status:
         duration = convert_duration(media_info.tracks[0].duration)
         file_size = convert_file_size(media_info.tracks[0].file_size)
+        multi_audio_track = check_multi_audio(media_info)
 
-    return good_status, duration, file_size
+    return good_status, duration, file_size, multi_audio_track
