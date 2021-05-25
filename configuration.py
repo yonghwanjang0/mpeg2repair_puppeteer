@@ -61,10 +61,10 @@ def convert_file_size(file_size):
 
 
 def check_multi_audio(info):
-    if info.tracks[3].track_type == 'Audio':
-        value = True
-    else:
-        value = False
+    value = False
+    if len(info.tracks) > 4:
+        if info.tracks[3].track_type == 'Audio':
+            value = True
 
     return value
 
