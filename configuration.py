@@ -69,12 +69,24 @@ def check_multi_audio(info):
     return value
 
 
-def convert_path(origin):
+def refine_folder_path(input_path_value):
     output = ""
-    split = origin.split("/")
-    for value in split:
-        if bool(value):
-            output += value + "\\"
+
+    # input case : "D:/ABC/" or "D:/ABC"
+    if "/" in input_path_value:
+        split = input_path_value.split("/")
+        for value in split:
+            if bool(value):
+                output += value + "\\"
+
+    # input case : "D:\ABC\" or "D:\ABC"
+    else:
+        if input_path_value[-1] != "\\":
+            output = input_path_value + "\\"
+        else:
+            output = input_path_value
+
+    return output
 
 
 def make_folder(folder_path):

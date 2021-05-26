@@ -20,18 +20,8 @@ class MPEG2Repair:
         self.object.iface_transform.Move(self.position[count][0],
                                          self.position[count][1])
 
-    @staticmethod
-    def set_folder_path(path):
-        output = ""
-        split = path.split("/")
-        for value in split:
-            if bool(value):
-                output += value + "\\"
-
-        return output
-
     def set_default_folder(self, path):
-        self.window['파일 이름(N):Edit'].set_text(self.set_folder_path(path))
+        self.window['파일 이름(N):Edit'].set_text(path)
         self.window['열기(O)'].type_keys("{ENTER}")
         self.default_folder = True
 

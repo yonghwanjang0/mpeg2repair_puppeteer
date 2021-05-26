@@ -1,7 +1,7 @@
 from threading import Thread, Lock
 import time
-from configuration import input_path, get_path_and_option, \
-    make_file_list, check_file_status
+from configuration import input_path, refine_folder_path, \
+    get_path_and_option, make_file_list, check_file_status
 from MPEG2Repair import MPEG2Repair
 
 
@@ -104,6 +104,7 @@ def run_thread(*args):
     last_file_multi_audio = False
     mpeg2repair, queue, lock, index, folder_path = (
         args[0], args[1], args[2], args[3], args[4])
+    folder_path = refine_folder_path(folder_path)
 
     for filename in mpeg2repair.file_name_list:
         file_status = check_file_status(folder_path + filename)
