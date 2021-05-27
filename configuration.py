@@ -140,20 +140,21 @@ def make_file_list(paths):
         path, option = p[0], p[1]
         if path:
             files_list = next(os.walk(path))[2]
+            files_list = worked_files_filter(files_list)
             files_list = date_filter(files_list, option)
-            tp_list = container_filter(files_list, '.tp')
+            stream_files_list = container_filter(files_list, ['.tp', '.ts'])
         else:
-            tp_list = []
-        total_list.append(tp_list)
+            stream_files_list = []
+        total_list.append(stream_files_list)
 
     return total_list
 
 
-def container_filter(files_list, filter_string):
-    length = len(filter_string)
+def container_filter(files_list, container_list):
     filtered_list = []
     for file_name in files_list:
-        if file_name[-length:] == filter_string:
+        _, container = os.path.splitext(file_name)
+        if container in container_list:
             filtered_list.append(file_name)
 
     return filtered_list
@@ -191,6 +192,32 @@ def filtered_date_condition(file_date, option):
                 value = True
 
     return value
+
+
+def worked_files_filter(files_list):
+    find_index_list = find_already_worked_files(files_list)
+    refined_list = pass_by_already_worked_files(files_list, find_index_list)
+
+    return refined_list
+
+
+def find_already_worked_files(files_list):
+    index_list = []
+    for index, filename in enumerate(files_list):
+        name, container = os.path.splitext(filename)
+        if container == '.txt' and index > 0:
+            if name == files_list[index - 1]:
+                index_list.append(index - 1)
+                index_list.append(index)
+
+    return index_list
+
+
+def pass_by_already_worked_files(files_list, already_list):
+    for index in reversed(already_list):
+        del files_list[index]
+    
+    return files_list
 
 
 def check_file_status(file_path):

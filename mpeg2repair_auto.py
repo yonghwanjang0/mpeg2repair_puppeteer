@@ -76,7 +76,7 @@ class Main(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.title = 'MPEG2Repair Auto Checker v1.0.5.6'
+        self.title = 'MPEG2Repair Auto Checker v1.0.5.7'
         self.position = (620, 480, 1260, 660)
         self.cWidget = CentralWidget()
         self.setCentralWidget(self.cWidget)
