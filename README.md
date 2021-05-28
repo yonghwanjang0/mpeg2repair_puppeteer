@@ -11,6 +11,20 @@ This source code makes for windows 10.
  2. Input priority is UI input first. (If you do both option, Text file input is ignored.)
  3. If you have completed entering, Press Start Button (or F2 Button) (You don't have to enter all of them. Please enter only as many as you want.)
 
+### date option (optional)
+caution : only use filename start with prefix "MMDD_" (date string)
+(ex. '0528_filename.ts')
+
+1. use /path.txt
+   * input "folder|option" (ex. C:/folder/|1204)
+   * From ~ : "start date-" (ex. C:/folder/|0525-)
+   * ~ To : "-end date" (ex. C:/folder/|-0528)
+   * From ~ To : "start date-end date" (ex. C:/folder/|0525-0528)
+   * Only One Day : "date" (ex. C:/folder/|0528)
+
+2. use UI Input
+   * Same as the above usage. but you only have to enter 'date option' in the option field.
+
 ## Use Settings
 ### /exe_path.txt
  * please input mpeg2repair execute file path. (ex. C:/mpeg2repair/mpeg2repair.exe)
