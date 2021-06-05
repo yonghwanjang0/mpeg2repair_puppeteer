@@ -9,7 +9,7 @@ This source code makes for windows 10.
 ## Use
  1. Select directory. (optional : date option) (input UI path fields directly or by Text file.(path.txt))
  2. Input priority is UI input first. (If you do both option, Text file input is ignored.)
- 3. If you have completed entering, Press Start Button. (or F2 Button) (You don't have to enter all of them. Please enter only as many as you want.)
+ 3. If you have completed entering, Press Start Button. (or Keyboard F2 Button) (You don't have to enter all of them. Please enter only as many as you want.)
 
 ### date option (optional)
 caution : only use filename start with prefix "MMDD_" (date string)
