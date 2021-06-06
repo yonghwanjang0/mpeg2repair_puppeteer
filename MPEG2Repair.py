@@ -8,8 +8,21 @@ class MPEG2Repair:
         self.window = self.app.window(title='MPEG2Repair')
         self.object = self.window.wrapper_object()
         self.position = ((50, 50), (605, 50), (50, 450), (605, 450))
+
+        # child window object (button, dialog, field, progress)
         self.progress = self.window.child_window(
             auto_id="1022", control_type="Text")
+        self.file_dialog = self.window.child_window(
+            auto_id="1091", control_type="Text")
+        self.filename_field = self.window.child_window(
+            auto_id="1148", control_type="Edit")
+        self.open_button = self.window.child_window(
+            auto_id="1", control_type="Button")
+        self.done_button = self.window.child_window(
+            auto_id="2", control_type="Button")
+        self.no_button = self.window.child_window(
+            auto_id="7", control_type="Button")
+
         self.finished = False
         self.remain_time = None
         self.file_name_list = None
@@ -21,8 +34,9 @@ class MPEG2Repair:
                                          self.position[count][1])
 
     def set_default_folder(self, path):
-        self.window['파일 이름(N):Edit'].set_text(path)
-        self.window['열기(O)'].type_keys("{ENTER}")
+        self.filename_field.set_text(path)
+        self.open_button.type_keys("{ENTER}")
+
         self.default_folder = True
 
     def open_select_file(self, multi_audio):
@@ -42,7 +56,7 @@ class MPEG2Repair:
             else:
                 dialog_button.click_input()
 
-        active_dialog = self.window['찾는 위치(I):Static'].exists()
+        active_dialog = self.file_dialog.exists()
         if not active_dialog:
             self.open_select_file(multi_audio)
 
@@ -50,8 +64,8 @@ class MPEG2Repair:
         self.open_select_file(multi_audio)
         if not self.default_folder:
             self.set_default_folder(folder_path)
-        self.window['파일 이름(N):Edit'].set_text(filename)
-        self.window['열기(O)'].type_keys("{ENTER}")
+        self.filename_field.set_text(filename)
+        self.open_button.type_keys("{ENTER}")
         self.loop_stack = 0
         self.finished = False
         self.remain_time = None
@@ -83,15 +97,15 @@ class MPEG2Repair:
         self.remain_time = time_converter(remain_time)
 
     def finished_popup_close(self, loop=False):
-        self.window['확인Button'].set_focus()
+        self.done_button.set_focus()
         if loop:
-            self.window['확인Button'].click_input()
+            self.done_button.click_input()
         else:
-            self.window['확인Button'].type_keys("{ENTER}")
+            self.done_button.type_keys("{ENTER}")
 
     def cancel_overwrite_popup(self):
-        self.window['아니요(N)Button'].set_focus()
-        self.window['아니요(N)Button'].type_keys("{ENTER}")
+        self.no_button.set_focus()
+        self.no_button.type_keys("{ENTER}")
 
     def close(self):
         self.app.kill()
