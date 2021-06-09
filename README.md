@@ -12,7 +12,7 @@ This source code makes for windows 10.
  3. If you have completed entering, Press Start Button. (or Keyboard F2 Button.) (You don't have to enter all of them. Please enter only as many as you want.)
 
 ### date option (optional)
-caution : only use filename start with prefix "MMDD_" (date string)
+caution : only use filename start with prefix "MMDD_". (date string)
 (ex. '0528_filename.ts')
 
 1. use /path.txt
