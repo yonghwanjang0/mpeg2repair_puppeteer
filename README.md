@@ -17,10 +17,10 @@ caution : only use filename start with prefix "MMDD_". (date string)
 
 1. use /path.txt
    * input "folder|option" (ex. C:/folder/|1204)
-   * From ~ : "start date-" (ex. C:/folder/|0525-)
-   * ~ To : "-end date" (ex. C:/folder/|-0528)
-   * From ~ To : "start date-end date" (ex. C:/folder/|0525-0528)
-   * Only One Day : "date" (ex. C:/folder/|0528)
+    * From ~ : "start date-" (ex. C:/folder/|0525-)
+    * ~ To : "-end date" (ex. C:/folder/|-0528)
+    * From ~ To : "start date-end date" (ex. C:/folder/|0525-0528)
+    * Only One Day : "date" (ex. C:/folder/|0528)
 
 2. use UI Input
    * Same as the above usage. but you only have to enter 'date option' in the option field.
