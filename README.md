@@ -12,7 +12,7 @@ This source code makes for windows 10.
  5. After total files have been scanned, mpeg2repair program is turned off. (It turns off independently for each task.)
 
 ### date option (optional)
-caution : only use filename start with prefix "MMDD_". (date string)
+caution : only use filename start with prefix "MMDD_". (input date string type)
 (e.g. : '0528_filename.ts')
 
 1. use /path.txt
