@@ -33,7 +33,7 @@ caution : only use filename start with prefix "MMDD_". (input date string type)
 
 ### /path.txt
 * write transport stream files folder path on each line of 'path.txt' file.
-* Paths are separated by each line. (seperate by enter button. ("\n"))
+* Input paths are separated by each line. (seperate by enter button. ("\n"))
   (e.g. : 
   C:/target/\n
   D:/target/\n
