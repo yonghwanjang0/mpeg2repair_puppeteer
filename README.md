@@ -14,7 +14,7 @@ This source code makes for windows 10.
  7. When all tasks are finished, the next task can be executed. (must re-enter the paths.)  
 
 ### date option (optional)
-caution : only use filename start with prefix "MMDD_". (input date string type)
+caution : only use filename start with prefix "MMDD_". (month-day string type)
 (e.g. : '0528_filename.ts')
 
 1. use /path.txt
