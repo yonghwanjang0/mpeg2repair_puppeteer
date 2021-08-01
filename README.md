@@ -32,7 +32,7 @@ caution : only use filename start with prefix "MMDD_". (month-day string type)
  * please input the mpeg2repair execute file path. (e.g. C:/mpeg2repair/mpeg2repair.exe)
 
 ### /path.txt
-* write transport stream files folder path on each line of 'path.txt' file.
+* write transport stream files folder path on each line of 'path.txt' file. 
 * Input paths are separated by each line. (seperate by enter button. ("\n"))
   (e.g. : 
   C:/target/\n
