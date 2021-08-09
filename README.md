@@ -10,7 +10,7 @@ This source code makes for windows 10.
  3. If you have completed entering, Press the Start Button. (or Keyboard F2 Button.) (You don't have to enter all of them. Please enter only as many as you want.)
  4. Whenever each file is completed scan. filename, duration and capacity are wrote in the result box.
  5. After total files have been scanned, mpeg2repair program is turned off. (It turns off independently for each task.)
- 6. While working, the start button does not work. 
+ 6. While working, the start button does not work. (for blocking the duplicate work.)
  7. When all tasks are finished, the next task can be executed. (must re-enter the stream files folder paths.) 
 
 ### date option (optional)
