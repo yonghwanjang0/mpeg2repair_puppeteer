@@ -38,7 +38,7 @@ caution : only use filename start with prefix "MMDD_". (month-day string type)
   C:/target/\n
   D:/target/\n
   E:/target/)
-* wrote maximum 3 lines possible(3 paths), and more input value be ignored.
+* wrote maximum 3 lines possible(3 paths), and more input value be ignored. 
 
 ## requirements
 * PyQt5
