@@ -29,7 +29,7 @@ caution : only use filename start with prefix "MMDD_". (month-day string type)
 
 ## Use Settings
 ### /exe_path.txt
- * please input the mpeg2repair execute file path. (e.g. C:/mpeg2repair/mpeg2repair.exe)
+ * Input the mpeg2repair execute file path. (e.g. C:/mpeg2repair/mpeg2repair.exe)
 
 ### /path.txt
 * write the transport stream files folder path on each line of 'path.txt' file. 
