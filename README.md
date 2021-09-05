@@ -26,7 +26,7 @@ caution : only use filename start with prefix "MMDD_". (month-day string type)
      * Only One Day : "date" (e.g. : C:/folder/|0528)
 
 2. use UI Input
-   * Same as the above usage. but you only have to enter 'date option' in the option field box.
+   * Same as the above usage. but you only have to enter 'date option' in the option field box. 
 
 ## Use Settings
 ### /exe_path.txt
